@@ -1,45 +1,78 @@
-import { useState } from "react";
-import Button from "../UI/Button";
-import Card from "../UI/Card";
-import styles from "./User.module.css";
+import { useState } from 'react';
+import Button from '../UI/Button';
+import Card from '../UI/Card';
+import UserList from './UserList';
+import styles from './User.module.css';
+import ErrorModal from '../UI/ErrorModal';
 
 const users = [];
 
 const User = () => {
-  const user = { name: "", age: "" };
-  const [userName, setUserName] = useState("");
-  const [age, setUserAge] = useState("");
+  const user = { name: '', age: '' };
 
-  function handleBtnClick(event) {
-    user.name = userName;
-    user.age = age;
+  const [userName, setUserName] = useState('');
+  const [age, setUserAge] = useState('');
+  const [isValid, setIsValid] = useState(true);
+  let errorMessage = '';
 
-    users.push(user);
-    console.log(users);
-  }
+  function handleBtnClick(event) {}
 
   function handleSubmitForm(e) {
     e.preventDefault();
-    // console.log(e.target);
+    user.name = userName;
+    user.age = age;
+
+    if (userName.length > 0 && age.length > 0) {
+      users.push(user);
+      console.log(typeof age);
+      setUserName('');
+      setUserAge('');
+    } else if (typeof age !== 'number') {
+      errorMessage = 'Please enter valid name and age (non empty values)';
+    }
   }
 
   function handleChange(e) {
-    e.target.name === "user"
+    e.target.name === 'user'
       ? setUserName(e.target.value)
       : setUserAge(e.target.value);
+
+    if (e.target.value.trim().length === 0) {
+      setIsValid(false);
+    } else {
+      setIsValid(true);
+    }
   }
 
   return (
     <Card className="card">
-      <form className={styles.input} onSubmit={handleSubmitForm}>
-        <label>Username</label>
-        <input type="text" name="user" id="user" onChange={handleChange} />
+      <form className={`${styles.input}`} onSubmit={handleSubmitForm}>
+        <label className={`${!isValid && styles.invalid}`}>Username</label>
+        <input
+          type="text"
+          name="user"
+          id="user"
+          value={userName}
+          onChange={handleChange}
+          className={`${!isValid && styles.invalid}`}
+        />
 
-        <label>Age (years) </label>
-        <input type="text" name="age" id="age" onChange={handleChange} />
+        <label className={`${!isValid && styles.invalid}`}>Age (years) </label>
+        <input
+          type="text"
+          name="age"
+          id="age"
+          value={age}
+          onChange={handleChange}
+          className={`${!isValid && styles.invalid}`}
+        />
 
         <Button onButtonClick={handleBtnClick} type="submit" />
       </form>
+
+      <UserList users={users} />
+
+      <ErrorModal message={errorMessage} />
     </Card>
   );
 };

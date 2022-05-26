@@ -24,3 +24,11 @@
   outline: none;
   border-color: #4f005f;
 }
+
+.input input.invalid {
+  background-color: red;
+}
+
+label.invalid {
+  color: red;
+}
