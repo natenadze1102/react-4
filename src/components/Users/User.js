@@ -15,8 +15,13 @@ const User = () => {
   const [isValid, setIsValid] = useState(true);
   let errorMessage = '';
 
-  function handleBtnClick(event) {}
+  function getErrorMessage(value) {
+    errorMessage = value;
+  }
 
+  function handleBtnClick() {
+    console.log('clicked');
+  }
   function handleSubmitForm(e) {
     e.preventDefault();
     user.name = userName;
@@ -27,8 +32,6 @@ const User = () => {
       console.log(typeof age);
       setUserName('');
       setUserAge('');
-    } else if (typeof age !== 'number') {
-      errorMessage = 'Please enter valid name and age (non empty values)';
     }
   }
 
@@ -72,7 +75,11 @@ const User = () => {
 
       <UserList users={users} />
 
-      <ErrorModal message={errorMessage} />
+      <ErrorModal
+        name={userName}
+        age={age}
+        sendErrorMessage={getErrorMessage}
+      />
     </Card>
   );
 };
