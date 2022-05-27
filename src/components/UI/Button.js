@@ -1,4 +1,4 @@
-import styles from './Button.module.css';
+import styles from "./Button.module.css";
 
 const Button = (props) => {
   function handleBtnClick(event) {
@@ -12,7 +12,7 @@ const Button = (props) => {
       onClick={handleBtnClick}
       type={props.type}
     >
-      Add User
+      {props.btnContent}
     </button>
   );
 };

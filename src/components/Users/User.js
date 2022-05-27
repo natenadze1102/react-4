@@ -1,27 +1,35 @@
-import { useState } from 'react';
-import Button from '../UI/Button';
-import Card from '../UI/Card';
-import UserList from './UserList';
-import styles from './User.module.css';
-import ErrorModal from '../UI/ErrorModal';
+import { useState } from "react";
+import Button from "../UI/Button";
+import Card from "../UI/Card";
+import UserList from "./UserList";
+import styles from "./User.module.css";
+import ErrorModal from "../UI/ErrorModal";
 
 const users = [];
 
 const User = () => {
-  const user = { name: '', age: '' };
+  const user = { name: "", age: "" };
 
-  const [userName, setUserName] = useState('');
-  const [age, setUserAge] = useState('');
+  const [userName, setUserName] = useState("");
+  const [age, setUserAge] = useState("");
   const [isValid, setIsValid] = useState(true);
-  let errorMessage = '';
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // let errorModalIsDisplayed = false;
+  const [errorModalIsDisplayed, setErrorModalIsDisplayed] = useState("none");
+
+  function handleDisplay(value) {
+    setErrorModalIsDisplayed(value);
+  }
 
   function getErrorMessage(value) {
     errorMessage = value;
   }
 
   function handleBtnClick() {
-    console.log('clicked');
+    console.log("clicked");
   }
+
   function handleSubmitForm(e) {
     e.preventDefault();
     user.name = userName;
@@ -30,13 +38,22 @@ const User = () => {
     if (userName.length > 0 && age.length > 0) {
       users.push(user);
       console.log(typeof age);
-      setUserName('');
-      setUserAge('');
+      setUserName("");
+      setUserAge("");
+
+      console.log(errorModalIsDisplayed);
+    }
+    if (age < 1) {
+      setErrorModalIsDisplayed("block");
+      setErrorMessage("Please enter a valid  age (>0)");
+    } else {
+      setErrorModalIsDisplayed("block");
+      setErrorMessage("Please enter a valid name and age (non-empty values)");
     }
   }
 
   function handleChange(e) {
-    e.target.name === 'user'
+    e.target.name === "user"
       ? setUserName(e.target.value)
       : setUserAge(e.target.value);
 
@@ -70,7 +87,11 @@ const User = () => {
           className={`${!isValid && styles.invalid}`}
         />
 
-        <Button onButtonClick={handleBtnClick} type="submit" />
+        <Button
+          onButtonClick={handleBtnClick}
+          type="submit"
+          btnContent={"Add User"}
+        />
       </form>
 
       <UserList users={users} />
@@ -79,6 +100,9 @@ const User = () => {
         name={userName}
         age={age}
         sendErrorMessage={getErrorMessage}
+        isDisplayed={handleDisplay}
+        isDisplayed2={errorModalIsDisplayed}
+        errorContent={errorMessage}
       />
     </Card>
   );
