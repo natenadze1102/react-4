@@ -1,23 +1,25 @@
-import { useState, useRef } from 'react';
-import Wrapper from '../Helpers/Wrapper';
-import Button from '../UI/Button';
-import Card from '../UI/Card';
+import { useState, useRef } from "react";
+import Wrapper from "../Helpers/Wrapper";
+import Button from "../UI/Button";
+import Card from "../UI/Card";
 // import UsersList from './UsersList';
-import styles from './User.module.css';
-import ErrorModal from '../UI/ErrorModal';
+import styles from "./User.module.css";
+import ErrorModal from "../UI/ErrorModal";
 
 // const users = [];
 
 const AddUser = (props) => {
   const nameInputRef = useRef();
   const ageInputRef = useRef();
+  let enteredName;
+  let enteredAge;
 
-  const user = { name: '', age: '' };
+  const user = { name: "", age: "" };
 
-  const [enteredUserName, setEnteredUserName] = useState('');
-  const [enteredAge, setUserEnteredAge] = useState('');
+  // const [enteredUserName, setEnteredUserName] = useState("");
+  // const [enteredAge, setUserEnteredAge] = useState("");
   const [isValid, setIsValid] = useState(true);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   const [errorModalIsDisplayed, setErrorModalIsDisplayed] = useState(false);
 
   // function handleDisplay(value) {
@@ -26,27 +28,32 @@ const AddUser = (props) => {
 
   function addUserHandler(event) {
     event.preventDefault();
-    user.name = enteredUserName;
+    const enteredName = nameInputRef.current.value;
+    const enteredAge = ageInputRef.current.value;
+
+    user.name = enteredName;
     user.age = +enteredAge;
 
     if (enteredAge < 1) {
       setErrorModalIsDisplayed(true);
-      setErrorMessage('Please enter a valid  age (>0)');
+      setErrorMessage("Please enter a valid  age (>0)");
       return;
-    } else if (enteredAge.length === 0 && enteredUserName.length === 0) {
+    } else if (enteredAge.length === 0 && enteredName.length === 0) {
       setErrorModalIsDisplayed(true);
-      setErrorMessage('Please enter a valid name and age (non-empty values)');
+      setErrorMessage("Please enter a valid name and age (non-empty values)");
       return;
     }
 
-    props.onAddUsers(user.name, user.age);
+    props.onAddUsers(enteredName, enteredAge);
 
-    setEnteredUserName('');
-    setUserEnteredAge('');
+    // setEnteredUserName("");
+    // setUserEnteredAge("");
+    nameInputRef.current.value = "";
+    ageInputRef.current.value = "";
   }
 
   function userNameChangeHandler(event) {
-    setEnteredUserName(event.target.value);
+    // setEnteredUserName(event.target.value);
     if (event.target.value.trim().length === 0) {
       setIsValid(false);
     } else {
@@ -55,8 +62,8 @@ const AddUser = (props) => {
   }
 
   function ageChangeHandler(event) {
-    setUserEnteredAge(event.target.value);
-
+    // setUserEnteredAge(event.target.value);
+    console.log(enteredAge);
     if (event.target.value.trim().length === 0) {
       setIsValid(false);
     } else {
@@ -78,14 +85,14 @@ const AddUser = (props) => {
             type="text"
             name="user"
             id="user"
-            value={enteredUserName}
+            value={enteredName}
             onChange={userNameChangeHandler}
             className={`${!isValid && styles.invalid}`}
             ref={nameInputRef}
           />
 
           <label className={`${!isValid && styles.invalid}`} htmlFor="age">
-            Age (years){' '}
+            Age (years){" "}
           </label>
           <input
             type="number"
@@ -102,7 +109,7 @@ const AddUser = (props) => {
       </Card>
       {errorModalIsDisplayed && (
         <ErrorModal
-          name={enteredUserName}
+          name={enteredName}
           age={enteredAge}
           title="Input error"
           onHandleError={handledisplayErrorModal}
