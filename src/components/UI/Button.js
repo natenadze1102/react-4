@@ -1,18 +1,13 @@
-import styles from "./Button.module.css";
+import styles from './Button.module.css';
 
 const Button = (props) => {
-  function handleBtnClick(event) {
-    // event.preventDefault();
-    props.onButtonClick();
-  }
-
   return (
     <button
       className={styles.button}
-      onClick={handleBtnClick}
-      type={props.type}
+      type={props.type || 'button'}
+      onClick={props.onClick}
     >
-      {props.btnContent}
+      {props.children}
     </button>
   );
 };

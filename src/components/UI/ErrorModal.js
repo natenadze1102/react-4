@@ -1,36 +1,45 @@
-import styles from "./ErrorModal.module.css";
-import { useState } from "react";
-import Button from "./Button";
+// import Card from './Card';
+import styles from './ErrorModal.module.css';
+import Button from './Button';
+import { Fragment } from 'react';
+import ReactDOM from 'react-dom';
+
+const Backdrop = (props) => {
+  return <div className={styles.backdrop} onClick={props.onHandleError} />;
+};
+
+const ModalOverlay = (props) => {
+  return (
+    <div className={styles.modal}>
+      <div className={styles.header}>
+        <h2>{props.title}</h2>
+      </div>
+      <div className={styles.content}>{props.message}</div>
+
+      <Button onClick={props.onHandleError}>Okay</Button>
+    </div>
+  );
+};
 
 const ErrorModal = (props) => {
-  // const [display, setDisplay] = useState("none");
-  let display = props.isDisplayed2;
-
-  function handleButtonClick() {
-    // setDisplay("none");
-    props.isDisplayed("none");
-    console.log(props.isDisplayed2);
-  }
-
   if (props.age.length === 0) {
-    // props.sendErrorMessage(
-    //   'Please enter valid name and age (non empty values)'
-    // );
-    // console.log(props.errorMessage);
     console.log(props.user);
   }
   return (
-    <div className={styles.backdrop} style={{ display: display }}>
-      <div className={styles.modal}>
-        <div className={styles.header}>
-          {/* <h2>{props.message}</h2> */}
-          <h2>Invalid Input</h2>
-        </div>
-        <div className={styles.content}>{props.errorContent}</div>
-
-        <Button btnContent="Okay" onButtonClick={handleButtonClick} />
-      </div>
-    </div>
+    <Fragment>
+      {ReactDOM.createPortal(
+        <Backdrop onHandleError={props.onHandleError} />,
+        document.getElementById('backdrop-root')
+      )}
+      {ReactDOM.createPortal(
+        <ModalOverlay
+          onHandleError={props.onHandleError}
+          title={props.title}
+          message={props.message}
+        />,
+        document.getElementById('overlay-root')
+      )}
+    </Fragment>
   );
 };
 
